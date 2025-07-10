@@ -19,11 +19,6 @@ use Illuminate\Support\Facades\Validator;
 class BookingController extends Controller
 {
     public function index(){
-        
-        // THIS IS OLD CODE
-        // $hargaPaket = HargaPaket::whereHas('paket', function ($query) {
-        //     $query->orderBy('nama_paket','asc');
-        // })->get();
         $paketTambahan = PaketTambahan::all();
         
         $hargaPaket = HargaPaket::join('paket', 'harga_paket.paket_id', '=', 'paket.id_paket')
@@ -55,7 +50,7 @@ class BookingController extends Controller
             // }
         
             $total = $pes->booking->dp + $pes->pelunasan;
-            $kekurangan = ($pes->booking->harga_paket->harga + $jumlahHargaTambahan) - ($total + $pes->discount);
+            $kekurangan = ($pes->booking->harga + $jumlahHargaTambahan) - ($total + $pes->discount);
         
             // Update pesanan dengan nilai yang telah dihitung
             $pes->update([
@@ -64,16 +59,6 @@ class BookingController extends Controller
                 'total' => $total
             ]);
         }
-        
-        // $antrianTerakhir = Foto::max('antrian') ?? 0;
-
-        // $foto = new Foto();
-        // $foto->id_foto = 'FT' . str_pad(rand(0, 999), 3, '0', STR_PAD_LEFT) . Carbon::now()->format('YmdHis');
-        // $foto->pesanan_id = 'PSN62920250502221242';
-        // $foto->status_foto = 'Waiting for Photoshoot';
-        // $foto->antrian = $antrianTerakhir + 1;
-        // $foto->save();
-
         
         return view('admin.booking.index',compact('hargaPaket','booking','paketTambahan'));
     }
@@ -170,6 +155,8 @@ class BookingController extends Controller
                 ->withInput();
         }
 
+        $harga = HargaPaket::find($request->harga_paket_id)->harga;
+
         $b = Booking::find($id);
         $b->nama = $request->nama;
         $b->email = $request->email;
@@ -193,6 +180,7 @@ class BookingController extends Controller
         // $b->status_booking = $request->status_booking;
         // $b->user_id = Auth::user()->id;
         $b->harga_paket_id = $request->harga_paket_id;
+        $b->harga = $harga;
 
         // Update paket tambahan jika ada
         if ($request->has('paket_tambahan')) {

@@ -16,6 +16,7 @@ class HargaPaketController extends Controller
         $paket = Paket::all();
         $hargaPaket = HargaPaket::all();
         $wilayah = Wilayah::all();
+        // dd($hargaPaket);
         
         return view('admin.harga-paket.index',compact('paket','hargaPaket'));
     }
@@ -78,7 +79,7 @@ class HargaPaketController extends Controller
 
         $hp = HargaPaket::find($id);
         // $hp->paket_id = $request->paket_id;
-        // $hp->golongan = $request->golongan;
+        $hp->golongan = $request->golongan;
         $hp->harga = $request->harga;
         $hp->save();
 

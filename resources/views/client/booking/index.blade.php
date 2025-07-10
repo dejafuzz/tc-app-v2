@@ -79,7 +79,7 @@
                                     
                                     {{-- Foto --}}
                                     @php
-                                        $jumlahAntrian = \App\Models\Foto::count();
+                                        $jumlahAntrian = \App\Models\Foto::orderBy('antrian', 'desc')->first()->antrian;
                                         $antrianAnda = \App\Models\Foto::where('pesanan_id',$item->pesanan?->id_pesanan)->first();
 
                                         if ($antrianAnda) {
@@ -88,9 +88,16 @@
                                             $antrianAnda = null;
                                         }
 
-                                        $cekAntrian = \App\Models\Foto::where('status_foto','Editing')->orderBy('antrian','asc')->first();
+                                        // $cekAntrian = \App\Models\Foto::where('status_foto','Editing')->orderBy('antrian','asc')->first();
+                                        // if ($cekAntrian) {
+                                        //     $antrianSekarang = $cekAntrian->antrian;
+                                        // } else {
+                                        //     $antrianSekarang = $jumlahAntrian;
+                                        // }
+                                        $cekAntrian = \App\Models\Foto::where('status_foto','Complete')->orderBy('antrian','desc')->first();
+                                        
                                         if ($cekAntrian) {
-                                            $antrianSekarang = $cekAntrian->antrian;
+                                            $antrianSekarang = $cekAntrian->antrian + 1;
                                         } else {
                                             $antrianSekarang = $jumlahAntrian;
                                         }

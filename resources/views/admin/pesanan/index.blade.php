@@ -112,8 +112,8 @@
                                     @if ($item->foto)
                                         @php
                                             $statusColors = [
-                                                'Waiting for Photoshoot' => 'primary',
-                                                'Uploading File' => 'info',
+                                                'Waiting for Photoshoot' => 'danger',
+                                                'Uploading File' => 'dark',
                                                 'Sending File' => 'secondary',
                                                 'List File Edit' => 'info',
                                                 'Editing' => 'primary',
@@ -131,7 +131,8 @@
                                         -
                                     @endif
                                 </td>
-                                <td>{{ 'Rp ' . number_format($item->booking->harga_paket->harga, 0, ',', '.') ?? '-' }}</td>
+                                <td>{{ 'Rp ' . number_format($item->booking->harga, 0, ',', '.') ?? '-' }}</td>
+                                {{-- <td>{{ 'Rp ' . number_format($item->booking->harga_paket->harga, 0, ',', '.') ?? '-' }}</td> --}}
                                 <td>{{ 'Rp ' . number_format($item->harga_paket_tambahan, 0, ',', '.') ?? '-' }}</td>
                                 <td>{{ 'Rp ' . number_format($item->booking->dp, 0, ',', '.') ?? '-' }}</td>
                                 <td>{{ 'Rp ' . number_format($item->discount, 0, ',', '.') ?? '-' }}</td>
@@ -482,7 +483,7 @@
                                     // foreach ($item->booking->paketTambahan as $pt) {
                                     //     $jumlahHargaTambahan += $pt->harga_tambahan;
                                     // }
-                                    $kekurangan = ($item->booking->harga_paket->harga + $jumlahHargaTambahan) - ($item->booking->dp + $item->pelunasan);
+                                    $kekurangan = ($item->booking->harga + $jumlahHargaTambahan) - ($item->booking->dp + $item->pelunasan);
                                     
                                     $total = $item->booking->dp + $item->pelunasan;
                                     
@@ -507,7 +508,7 @@
                                         <label for="harga" class="col-form-label">Harga Paket</label>
                                         <input 
                                             type="text" 
-                                            value="{{ old('harga', number_format($item->booking->harga_paket->harga ?? 0, 0, ',', '.')) }}" 
+                                            value="{{ old('harga', number_format($item->booking->harga ?? 0, 0, ',', '.')) }}" 
                                             name="harga" 
                                             class="form-control @error('harga') is-invalid @enderror" 
                                             id="harga" 

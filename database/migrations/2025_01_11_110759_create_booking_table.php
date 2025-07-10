@@ -40,6 +40,8 @@ return new class extends Migration
             $table->integer('pelunasan')->nullable();
             $table->text('file_pelunasan')->nullable();
             $table->string('jam_selesai')->nullable();  
+
+            $table->integer('harga')->nullable();
             
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();

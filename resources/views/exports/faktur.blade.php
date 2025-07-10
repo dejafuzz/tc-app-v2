@@ -124,7 +124,7 @@
             @php
                 $kuantitas = 1;
                 $jumlahHargaTambahan = 0;
-                $total = $pesanan->booking->harga_paket->harga * $kuantitas;
+                $total = $pesanan->booking->harga * $kuantitas;
             @endphp
             <tr>
                 <td>
@@ -144,7 +144,7 @@
                     @endforeach
                 </td>
                 <td style="text-align: center">1</td>
-                <td colspan="3">{{ 'Rp ' . number_format($pesanan->booking->harga_paket->harga, 0, ',', '.') ?? '-' }}</td>
+                <td colspan="3">{{ 'Rp ' . number_format($pesanan->booking->harga, 0, ',', '.') ?? '-' }}</td>
                 <td colspan="2">{{ 'Rp ' . number_format($total, 0, ',', '.') ?? '-' }}</td>
             </tr>
             

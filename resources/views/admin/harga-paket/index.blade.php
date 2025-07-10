@@ -70,13 +70,16 @@
 
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <table class="table table-bordered table-striped table-hover" id="harga_paket" width="100%" cellspacing="0">
                     <thead>
                         <tr class="text-center">
                             <th class="text-center">NO</th>
+                            {{-- <th class="text-center">ID</th>
+                            <th class="text-center">CREATED_AT</th> --}}
                             <th class="text-center">NAMA PAKET</th>
                             <th class="text-center">GOLONGAN WILAYAH</th>
                             <th class="text-center">HARGA PAKET</th>
+                            {{-- <th class="text-center">paket id</th> --}}
                             <th class="text-center">AKSI</th>
                         </tr>
                     </thead>
@@ -84,9 +87,12 @@
                         @foreach ($hargaPaket as $item)
                             <tr class="text-center">
                                 <td class="text-center">{{ $loop->iteration }}</td>
+                                {{-- <td class="text-center">{{ $item->id_harga_paket }}</td>
+                                <td class="text-center">{{ Carbon\Carbon::parse($item->created_at)->translatedFormat('d F Y') }}</td> --}}
                                 <td class="text-center">{{ $item->paket->kategori_paket->nama_kategori . ' ' . $item->paket->nama_paket }}</td>
                                 <td class="text-center">{{ $item->golongan }}</td>
                                 <td class="text-center">{{ 'Rp ' . number_format($item->harga, 0, ',', '.') }}</td>
+                                {{-- <td class="text-center">{{ $item->paket_id }}</td> --}}
                                 <td class="text-center">
                                     <div class="d-flex justify-content-center">
                                         <a href="#" class="btn btn-success btn-circle btn-sm mr-2" data-toggle="modal" data-target="#modalDetail{{ $item->id_harga_paket }}"  title="Detail">
@@ -145,7 +151,7 @@
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="modalEditLabel">Edit Harga Paket</h5>
+                        <h5 class="modal-title" id="modalEditLabel">Edit Harga Paket {{ $item->paket->kategori_paket->nama_kategori . ' ' . $item->paket->nama_paket . ' ' . $item->golongan }}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -181,6 +187,19 @@
                                 <label for="harga" class="col-form-label">Harga Paket</label>
                                 <input type="number" value="{{ old('harga',$item->harga) }}" min="1" name="harga" class="form-control @error('harga') is-invalid @enderror" id="harga">
                                 @error('harga')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="form-group">
+                                <label for="golongan" class="col-form-label">Golongan Wilayah</label>
+                                <select id="inputState" name="golongan" class="form-control @error('golongan') is-invalid @enderror">
+                                    <option selected disabled value="">-- Pilih --</option>
+                                    <option value="W1" {{ old('golongan', $item->golongan) == 'W1' ? 'selected' : '' }}>Wilayah 1</option>
+                                    <option value="W2" {{ old('golongan', $item->golongan) == 'W2' ? 'selected' : '' }}>Wilayah 2</option>
+                                    <option value="W3" {{ old('golongan', $item->golongan) == 'W3' ? 'selected' : '' }}>Wilayah 3</option>
+                                    <option value="W4" {{ old('golongan', $item->golongan) == 'W4' ? 'selected' : '' }}>Wilayah 4</option>
+                                </select>
+                                @error('golongan')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>

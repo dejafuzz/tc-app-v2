@@ -99,12 +99,14 @@
 
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr class="text-center">
                             <th class="text-center">NO</th>
+                            <th class="text-center">ID</th>
                             <th class="text-center">NAMA PAKET</th>
                             <th class="text-center">KATEGORI PAKET</th>
+                            {{-- <th class="text-center">TANGGAL</th> --}}
                             <th class="text-center">FITUR PAKET</th>
                             <th class="text-center">AKSI</th>
                         </tr>
@@ -113,8 +115,10 @@
                         @foreach ($paket as $item)
                             <tr class="text-center">
                                 <td class="text-center">{{ $loop->iteration }}</td>
+                                <td class="text-center">{{ $item->id_paket }}</td>
                                 <td class="text-center">{{ $item->nama_paket }}</td>
                                 <td class="text-center">{{ $item->kategori_paket->nama_kategori }}</td>
+                                {{-- <td class="text-center">{{ Carbon\Carbon::parse($item->created_at)->translatedFormat('d F Y') }}</td> --}}
                                 <td class="text-left">
                                     @php
                                         $fiturs = json_decode($item->fitur);
@@ -192,8 +196,9 @@
                                 <label for="kp_id" class="col-form-label">Kategori Paket</label>
                                 <select id="inputState" name="kp_id" class="form-control @error('kp_id') is-invalid @enderror">
                                     <option>-- Pilih Kategori Paket --</option>
+                                    
                                     @foreach ($kp as $k)
-                                        <option value="{{ $k->id_kp }}" {{ old('kp_id',$item->kp_id) == $item->kp_id ? 'selected' : '' }}>{{ $k->nama_kategori }}</option>
+                                        <option value="{{ $k->id_kp }}" {{ old('kp_id',$item->kp_id) == $k->id_kp ? 'selected' : '' }}>{{ $k->nama_kategori }}</option>
                                     @endforeach
                                 </select>
                                 @error('kp_id')

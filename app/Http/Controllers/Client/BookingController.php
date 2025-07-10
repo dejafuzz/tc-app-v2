@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class BookingController extends Controller
 {
@@ -65,9 +66,12 @@ class BookingController extends Controller
                 ->withErrors($validator)
                 ->withInput();
         }
+
+        $hargaPaket = HargaPaket::find($request->harga_paket_id)->harga;
+
         
         $b = new Booking();
-        $b->id_booking = 'BOOK' . str_pad(rand(0, 999), 3, '0', STR_PAD_LEFT);
+        $b->id_booking = 'BOOK' . strtoupper(Str::uuid()->toString());
         $b->nama = $request->nama;
         $b->email = $request->email;
         $b->no_wa = $request->no_wa;
@@ -90,6 +94,8 @@ class BookingController extends Controller
         $b->jumlah_anggota = $request->jumlah_anggota;
         $b->req_khusus = $request->req_khusus;
         $b->status_booking = 'Pending';
+        $b->harga = $hargaPaket;
+
         // $b->user_id = Auth::user()->id;
         $b->harga_paket_id = $request->harga_paket_id;
         $b->user_id = Auth::user()->id;
@@ -135,6 +141,8 @@ class BookingController extends Controller
                 ->withInput();
         }
 
+        $harga = HargaPaket::find($request->harga_paket_id)->harga;
+
         $b = Booking::find($id);
         $b->nama = $request->nama;
         $b->email = $request->email;
@@ -157,6 +165,7 @@ class BookingController extends Controller
         // $b->status_booking = $request->status_booking;
         // $b->user_id = Auth::user()->id;
         $b->harga_paket_id = $request->harga_paket_id;
+        $b->harga = $harga;
 
         // untuk memberi tanggal dibuatnya faktur
         // if ($b->dp != $request->dp || $b->dp == null ) {

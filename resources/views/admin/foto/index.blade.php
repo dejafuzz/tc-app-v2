@@ -58,8 +58,8 @@
                                 <td class="text-center">
                                     @php
                                         $statusColors = [
-                                            'Waiting for Photoshoot' => 'primary',
-                                            'Uploading File' => 'info',
+                                            'Waiting for Photoshoot' => 'danger',
+                                            'Uploading File' => 'dark',
                                             'Sending File' => 'warning',
                                             'List File Edit' => 'info',
                                             'Editing' => 'primary',

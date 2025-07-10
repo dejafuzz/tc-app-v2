@@ -10,6 +10,12 @@ $(document).ready(function() {
 });
 
 $(document).ready(function() {
+    $('#harga_paket').DataTable({
+        paging: false,
+    });
+});
+
+$(document).ready(function() {
     $('#booking').DataTable({
         ordering: true, // Mengaktifkan pengurutan
         scrollX: true, // Mengaktifkan scroll horizontal

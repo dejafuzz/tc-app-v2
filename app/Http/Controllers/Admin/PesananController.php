@@ -50,7 +50,8 @@ class PesananController extends Controller
             // }
         
             $total = $pes->booking->dp + $pes->pelunasan;
-            $kekurangan = ($pes->booking->harga_paket->harga + $jumlahHargaTambahan) - ($total + $pes->discount);
+            // $kekurangan = ($pes->booking->harga_paket->harga + $jumlahHargaTambahan) - ($total + $pes->discount);
+            $kekurangan = ($pes->booking->harga + $jumlahHargaTambahan) - ($total + $pes->discount);
         
             // Update pesanan dengan nilai yang telah dihitung
             $pes->update([
@@ -101,7 +102,7 @@ class PesananController extends Controller
                 'upload_ig' => $item->booking->post_foto ?? '-',
                 'keterangan' => $item->keterangan ?? '-',
                 'status_foto' => $item->foto->status_foto ?? '-',
-                'harga' => 'Rp ' . number_format($item->booking->harga_paket->harga, 0, ',', '.'),
+                'harga' => 'Rp ' . number_format($item->booking->harga, 0, ',', '.'),
                 'total_paket_tambahan' => 'Rp ' . number_format($item->harga_paket_tambahan, 0, ',', '.'),
                 'dp' => 'Rp ' . number_format($item->booking->dp, 0, ',', '.'),
                 'kekurangan' => 'Rp ' . number_format($item->kekurangan, 0, ',', '.'),
@@ -251,6 +252,9 @@ class PesananController extends Controller
         else {
             // $foto->status_foto = $request->status_foto;
             // $foto->link = $request->link;
+            if ($request->status_pembayaran == 'Lunas') {
+                $foto->status_foto = 'Uploading File';
+            }
             $foto->save();
         }
 
