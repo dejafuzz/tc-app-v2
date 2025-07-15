@@ -74,8 +74,8 @@
                     <thead>
                         <tr class="text-center">
                             <th class="text-center">NO</th>
-                            {{-- <th class="text-center">ID</th>
-                            <th class="text-center">CREATED_AT</th> --}}
+                            {{-- <th class="text-center">ID</th> --}}
+                            {{-- <th class="text-center">CREATED_AT</th> --}}
                             <th class="text-center">NAMA PAKET</th>
                             <th class="text-center">GOLONGAN WILAYAH</th>
                             <th class="text-center">HARGA PAKET</th>
@@ -87,8 +87,8 @@
                         @foreach ($hargaPaket as $item)
                             <tr class="text-center">
                                 <td class="text-center">{{ $loop->iteration }}</td>
-                                {{-- <td class="text-center">{{ $item->id_harga_paket }}</td>
-                                <td class="text-center">{{ Carbon\Carbon::parse($item->created_at)->translatedFormat('d F Y') }}</td> --}}
+                                {{-- <td class="text-center">{{ $item->id_harga_paket }}</td> --}}
+                                {{-- <td class="text-center">{{ Carbon\Carbon::parse($item->created_at)->translatedFormat('d F Y') }}</td> --}}
                                 <td class="text-center">{{ $item->paket->kategori_paket->nama_kategori . ' ' . $item->paket->nama_paket }}</td>
                                 <td class="text-center">{{ $item->golongan }}</td>
                                 <td class="text-center">{{ 'Rp ' . number_format($item->harga, 0, ',', '.') }}</td>

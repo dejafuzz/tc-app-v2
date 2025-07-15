@@ -99,11 +99,11 @@
 
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
+                <table class="table table-bordered table-striped" id="harga_paket" width="100%" cellspacing="0">
                     <thead>
                         <tr class="text-center">
                             <th class="text-center">NO</th>
-                            <th class="text-center">ID</th>
+                            {{-- <th class="text-center">ID</th> --}}
                             <th class="text-center">NAMA PAKET</th>
                             <th class="text-center">KATEGORI PAKET</th>
                             {{-- <th class="text-center">TANGGAL</th> --}}
@@ -115,7 +115,7 @@
                         @foreach ($paket as $item)
                             <tr class="text-center">
                                 <td class="text-center">{{ $loop->iteration }}</td>
-                                <td class="text-center">{{ $item->id_paket }}</td>
+                                {{-- <td class="text-center">{{ $item->id_paket }}</td> --}}
                                 <td class="text-center">{{ $item->nama_paket }}</td>
                                 <td class="text-center">{{ $item->kategori_paket->nama_kategori }}</td>
                                 {{-- <td class="text-center">{{ Carbon\Carbon::parse($item->created_at)->translatedFormat('d F Y') }}</td> --}}
