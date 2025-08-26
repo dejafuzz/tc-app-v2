@@ -23,7 +23,7 @@ class PesananController extends Controller
         $bulan = request()->get('bulan');
         $hargaPaket = HargaPaket::orderBy('paket_id')->get();
 
-        $pesanan = Pesanan::with('booking')
+        $pesananQuery = Pesanan::with('booking')
                     ->whereHas('booking', function ($query) use ($bulan) {
                         $query->where('status_booking', 'Accepted');
 
@@ -42,7 +42,7 @@ class PesananController extends Controller
         
 
         // dd($pesanan);
-        foreach ($pesanan as $pes) {
+        foreach ($pesananQuery as $pes) {
             $jumlahHargaTambahan = $pes->harga_paket_tambahan;
         
             // foreach ($pes->booking->paketTambahan as $pt) {
@@ -63,6 +63,21 @@ class PesananController extends Controller
         
         $fotografer = Fotografer::all();
         $paketTambahan = PaketTambahan::all();
+        $pesanan = Pesanan::with('booking')
+                    ->whereHas('booking', function ($query) use ($bulan) {
+                        $query->where('status_booking', 'Accepted');
+
+                        if ($bulan) {
+                            $query->whereYear('tanggal', date('Y', strtotime($bulan)))
+                                ->whereMonth('tanggal', date('m', strtotime($bulan)));
+                        }
+                    })
+                    ->join('booking', 'pesanan.booking_id', '=', 'booking.id_booking')
+                    ->leftJoin('foto', 'pesanan.id_pesanan', '=', 'foto.pesanan_id') // join ke tabel foto
+                    ->orderByRaw("CASE WHEN foto.status_foto = 'Complete' THEN 1 ELSE 0 END") // Completed di bawah
+                    ->orderBy('booking.tanggal', 'asc') // urut tanggal naik
+                    ->select('pesanan.*')
+                    ->paginate(20);
         
         return view('admin.pesanan.index',compact('pesanan','fotografer','hargaPaket','paketTambahan'));
     }

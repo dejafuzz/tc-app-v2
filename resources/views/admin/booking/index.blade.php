@@ -47,7 +47,7 @@
                     <tbody>
                         @foreach ($booking as $item)
                             <tr class="text-center">
-                                <td style="max-width: 200px; width: 100px; text-align: center">{{ $loop->iteration }}</td>
+                                <td style="max-width: 200px; width: 100px; text-align: center">{{ $loop->iteration + ($booking->currentPage() - 1) * $booking->perPage() }}</td>
                                 <td>{{ $item->nama }}</td>
                                 <td style="text-align: left">
                                     <!-- Mengubah nomor WA jika dimulai dengan '0' -->
@@ -107,66 +107,6 @@
                                 <td>{{ $item->event }}</td>
                                 <td>{{ $item->lokasi_foto }}</td>
                                 <td>{{ $item->harga_paket?->paket->kategori_paket->nama_kategori . ' ' . $item->harga_paket?->paket->nama_paket }}</td>
-                                {{-- <td>
-                                    <!-- IG Vendor, menghapus '@' jika ada -->
-                                    @php
-                                        $igMua = $item->ig_mua;
-                                        if ($igMua && substr($igMua, 0, 1) === '@') {
-                                            $igMua = substr($igMua, 1); // Hapus '@' di depan
-                                        }
-                                    @endphp
-                                    @if ($igMua)
-                                        <a href="https://instagram.com/{{ $igMua }}" target="_blank">
-                                            <i class="fab fa-instagram"></i> {{ $igMua }}</a>
-                                    @else
-                                        -
-                                    @endif
-                                </td>
-                                <td>
-                                    <!-- IG Vendor, menghapus '@' jika ada -->
-                                    @php
-                                        $igDress = $item->ig_dress;
-                                        if ($igDress && substr($igDress, 0, 1) === '@') {
-                                            $igDress = substr($igDress, 1); // Hapus '@' di depan
-                                        }
-                                    @endphp
-                                    @if ($igDress)
-                                        <a href="https://instagram.com/{{ $igDress }}" target="_blank">
-                                            <i class="fab fa-instagram"></i> {{ $igDress }}</a>
-                                    @else
-                                        -
-                                    @endif
-                                </td>
-                                <td>
-                                    <!-- IG Vendor, menghapus '@' jika ada -->
-                                    @php
-                                        $igNailart = $item->ig_nailart;
-                                        if ($igNailart && substr($igNailart, 0, 1) === '@') {
-                                            $igNailart = substr($igNailart, 1); // Hapus '@' di depan
-                                        }
-                                    @endphp
-                                    @if ($igNailart)
-                                        <a href="https://instagram.com/{{ $igNailart }}" target="_blank">
-                                            <i class="fab fa-instagram"></i> {{ $igNailart }}</a>
-                                    @else
-                                        -
-                                    @endif
-                                </td>
-                                <td>
-                                    <!-- IG Vendor, menghapus '@' jika ada -->
-                                    @php
-                                        $igHijab = $item->ig_hijab;
-                                        if ($igHijab && substr($igHijab, 0, 1) === '@') {
-                                            $igHijab = substr($igHijab, 1); // Hapus '@' di depan
-                                        }
-                                    @endphp
-                                    @if ($igHijab)
-                                        <a href="https://instagram.com/{{ $igHijab }}" target="_blank">
-                                            <i class="fab fa-instagram"></i> {{ $igHijab }}</a>
-                                    @else
-                                        -
-                                    @endif
-                                </td> --}}
                                 <td>
                                     @if ($item->post_foto == 'Bersedia')
                                         <span class="badge badge-success">{{ $item->post_foto }}</span>
@@ -195,49 +135,57 @@
 
                                 <td>
                                     <div class="d-flex justify-content-center">
-                                        <a href="#" class="btn btn-warning btn-circle btn-sm mr-2" data-toggle="modal" data-target="#modalEdit{{ $item->id_booking }}" title="Update">
-                                            <i class="fas fa-exclamation-triangle"></i>
-                                        </a>
-                                        <a href="" class="btn btn-info btn-circle btn-sm mr-2" data-toggle="modal" data-target="#modalDP{{ $item->id_booking }}" title="Bukti DP">
-                                            <i class="fas fa-money-bill"></i>
-                                        </a>
-
-                                        
-                                        {{-- <form action="{{ route('admin.ubah.status.booking',$item->id_booking) }}" method="post">
-                                            @csrf
-                                            @method('put')
-                                            <input type="hidden" name="status_booking" value="Accepted">
-                                            <button class="btn btn-success btn-circle btn-acc btn-sm mr-2" type="submit"><i class="fas fa-solid fa-check"></i></button>
-                                        </form> --}}
-
-                                        <form action="{{ route('admin.ubah.status.booking', $item->id_booking) }}" method="post" class="accept-form">
-                                            @csrf
-                                            @method('put')
-                                            <input type="hidden" name="status_booking" value="Accepted">
-                                            <button title="Terima"
-                                                class="btn btn-success btn-circle btn-acc btn-sm mr-2" 
-                                                type="button" 
-                                                data-phone="{{ $item->no_wa }}"
-                                            >
-                                                <i class="fas fa-solid fa-check"></i>
+                                        <div class="dropdown">
+                                            <button class="btn btn-sm" type="button" id="dropdownMenuButton{{ $item->id_booking }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fas fa-ellipsis-v"></i>
                                             </button>
-                                        </form>
+                                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton{{ $item->id_booking }}">
+                                                
+                                                <!-- Update -->
+                                                <a href="#" class="dropdown-item" data-toggle="modal" data-target="#modalEdit{{ $item->id_booking }}">
+                                                    <i class="fas fa-exclamation-triangle text-warning"></i> Update
+                                                </a>
+                                                
+                                                <!-- Bukti DP -->
+                                                <a href="#" class="dropdown-item" data-toggle="modal" data-target="#modalDP{{ $item->id_booking }}">
+                                                    <i class="fas fa-money-bill text-info"></i> Bukti DP
+                                                </a>
 
-                                        <form action="{{ route('admin.ubah.status.booking',$item->id_booking) }}" method="post">
-                                            @csrf
-                                            @method('put')
-                                            <input type="hidden" name="status_booking" value="Rejected">
-                                            <button title="Tolak/Cancel" class="btn btn-info btn-circle btn-reject btn-sm mr-2" type="submit"><i class="fas fa-times"></i></button>
-                                        </form>
-                                        <form action="{{ route('admin.delete.booking',$item->id_booking) }}" method="POST" class="delete-form">
-                                            @csrf
-                                            @method('delete')
-                                            <button type="submit" class="btn btn-danger btn-circle btn-sm delete-btn mr-2" title="Delete">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </form>
+                                                <!-- Accept -->
+                                                <form action="{{ route('admin.ubah.status.booking', $item->id_booking) }}" method="post" class="accept-form d-inline">
+                                                    @csrf
+                                                    @method('put')
+                                                    <input type="hidden" name="status_booking" value="Accepted">
+                                                    <button type="button" 
+                                                            class="dropdown-item btn-acc" 
+                                                            data-phone="{{ $item->no_wa }}">
+                                                        <i class="fas fa-check text-success"></i> Terima
+                                                    </button>
+                                                </form>
+
+                                                <!-- Reject -->
+                                                <form action="{{ route('admin.ubah.status.booking',$item->id_booking) }}" method="post" class="d-inline">
+                                                    @csrf
+                                                    @method('put')
+                                                    <input type="hidden" name="status_booking" value="Rejected">
+                                                    <button type="submit" class="dropdown-item">
+                                                        <i class="fas fa-times text-danger"></i> Tolak / Cancel
+                                                    </button>
+                                                </form>
+
+                                                <!-- Delete -->
+                                                <form action="{{ route('admin.delete.booking',$item->id_booking) }}" method="POST" class="delete-form d-inline">
+                                                    @csrf
+                                                    @method('delete')
+                                                    <button type="submit" class="dropdown-item delete-btn">
+                                                        <i class="fas fa-trash text-danger"></i> Delete
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
                                     </div>
                                 </td>
+
                             </tr>
                             {{-- SweetAlert Delete --}}
                             
@@ -266,6 +214,9 @@
                         @endforeach
                     </tbody>
                 </table>
+                <div class="d-flex justify-content-center mt-3">
+                    {{ $booking->links() }}
+                </div>
 
                 
             </div>

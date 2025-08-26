@@ -62,7 +62,7 @@
                         @endphp
                         @foreach ($pesanan as $item)
                             <tr class="text-center">
-                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $loop->iteration + ($pesanan->currentPage() -1) * $pesanan->perPage() }}</td>
                                 <td>{{ \Carbon\Carbon::parse($item->booking->tanggal)->translatedFormat('d-m-Y') ?? '-' }}</td>
                                 <td>{{ $item->booking->nama ?? '-' }}</td>
                                 <td>{{ $item->booking->universitas ?? '-' }}</td>
@@ -212,6 +212,11 @@
                         @endforeach
                     </tbody>
                 </table>
+
+                <div class="d-flex justify-content-center mt-3">
+                    {{ $pesanan->links() }}
+                </div>
+
             </div>
         </div>
     </div>
