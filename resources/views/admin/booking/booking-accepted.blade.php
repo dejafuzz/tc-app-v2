@@ -1,12 +1,12 @@
 @extends('layouts.master')
 @section('content')
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">KELOLA BOOKING</h1>
+        <h1 class="h3 mb-0 text-gray-800">KELOLA BOOKING <strong>ACCEPTED</strong></h1>
     </div>
 
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex flex-wrap align-items-center">
-            <h6 class="m-0 font-weight-bold text-primary flex-grow-1">Daftar Booking</h6>
+            <h6 class="m-0 font-weight-bold text-primary flex-grow-1">Daftar Booking <strong>Accepted</strong></h6>
             <button type="button" class="btn btn-sm btn-primary shadow-sm mt-2 mt-md-0" data-toggle="modal" data-target="#modalTambah">
                 <i class="fas fa-solid fa-folder-plus fa-sm text-white-50"></i> Tambah Booking
             </button>
@@ -141,6 +141,14 @@
                                         <a href="" class="btn btn-info btn-circle btn-sm mr-2" data-toggle="modal" data-target="#modalDP{{ $item->id_booking }}" title="Bukti DP">
                                             <i class="fas fa-money-bill"></i>
                                         </a>
+
+                                        
+                                        {{-- <form action="{{ route('admin.ubah.status.booking',$item->id_booking) }}" method="post">
+                                            @csrf
+                                            @method('put')
+                                            <input type="hidden" name="status_booking" value="Accepted">
+                                            <button class="btn btn-success btn-circle btn-acc btn-sm mr-2" type="submit"><i class="fas fa-solid fa-check"></i></button>
+                                        </form> --}}
 
                                         <form action="{{ route('admin.ubah.status.booking', $item->id_booking) }}" method="post" class="accept-form">
                                             @csrf

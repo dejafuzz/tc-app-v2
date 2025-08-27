@@ -1,28 +1,13 @@
 @extends('layouts.master')
 @section('content')
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">KELOLA PESANAN</h1>
+        <h1 class="h3 mb-0 text-gray-800">KELOLA PESANAN <strong>COMPLETE</strong></h1>
     </div>
 
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex align-items-center justify-content-between flex-wrap">
             <!-- Title -->
-            <h6 class="m-0 font-weight-bold text-primary">Daftar Pesanan</h6>
-
-            <!-- Actions -->
-            <div class="d-flex align-items-center flex-wrap">
-                <!-- Tanggal Keberangkatan Input -->
-                <form action="{{ route('admin.export.pesanan') }}" method="GET" class="d-flex align-items-center mr-3">
-                    <div class="form-group d-flex mb-0 align-items-center">
-                        <input type="month" name="bulan" value="{{ request()->get('bulan') }}" id="filterTanggal"
-                            class="form-control form-control-sm mr-2" placeholder="Pilih bulan">
-                        <button type="submit" class="btn btn-sm btn-primary shadow-sm d-flex align-items-center">
-                            <i class="fas fa-file-export fa-sm text-white-50 mr-1"></i> Export
-                        </button>
-                    </div>
-                </form>
-
-            </div>
+            <h6 class="m-0 font-weight-bold text-primary">Daftar Pesanan <strong>Complete</strong></h6>
         </div>
 
         <div class="card-body">

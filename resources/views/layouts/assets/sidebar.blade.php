@@ -27,18 +27,37 @@
     <div class="sidebar-heading">
         PEMESANAN
     </div>
-    <li class="nav-item {{ Request::routeIs('admin.booking') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('admin.booking') }}">
-            <i class="fas fa-fw fa-location-arrow"></i>
+    
+    <li class="nav-item {{ Request::routeIs('admin.booking') || Request::routeIs('admin.booking.accepted') ? 'active' : '' }}">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
+            aria-expanded="{{ Request::routeIs('admin.booking') || Request::routeIs('admin.booking.accepted') ? 'true' : 'false' }}" 
+            aria-controls="collapseTwo">
+            <i class="fas fa-fw fa-money-bill"></i>
             <span>Booking</span>
         </a>
+        <div id="collapseTwo" class="collapse {{ Request::routeIs('admin.booking') || Request::routeIs('admin.booking.accepted') ? 'show' : '' }}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item {{ Request::routeIs('admin.booking') ? 'active' : '' }}" href="{{ route('admin.booking') }}">Booking</a>
+                <a class="collapse-item {{ Request::routeIs('admin.booking.accepted') ? 'active' : '' }}" href="{{ route('admin.booking.accepted') }}">Booking Accepted</a>
+            </div>
+        </div>
     </li>
-    <li class="nav-item {{ Request::routeIs('admin.pesanan') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('admin.pesanan') }}">
+
+    <li class="nav-item {{ Request::routeIs('admin.pesanan') || Request::routeIs('admin.pesanan.complete') ? 'active' : '' }}">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseOne"
+            aria-expanded="{{ Request::routeIs('admin.pesanan') || Request::routeIs('admin.pesanan.complete') ? 'true' : 'false' }}" 
+            aria-controls="collapseOne">
             <i class="fas fa-fw fa-money-bill"></i>
             <span>Pesanan</span>
         </a>
+        <div id="collapseOne" class="collapse {{ Request::routeIs('admin.pesanan') || Request::routeIs('admin.pesanan.complete') ? 'show' : '' }}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item {{ Request::routeIs('admin.pesanan') ? 'active' : '' }}" href="{{ route('admin.pesanan') }}">Pesanan</a>
+                <a class="collapse-item {{ Request::routeIs('admin.pesanan.complete') ? 'active' : '' }}" href="{{ route('admin.pesanan.complete') }}">Pesanan Complete</a>
+            </div>
+        </div>
     </li>
+
     <li class="nav-item {{ Request::routeIs('admin.foto') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('admin.foto') }}">
             <i class="fas fa-fw fa-camera-retro"></i>

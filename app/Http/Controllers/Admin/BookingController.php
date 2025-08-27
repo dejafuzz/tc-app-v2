@@ -27,7 +27,8 @@ class BookingController extends Controller
             ->select('harga_paket.*') // Ambil seig_mua kolom dari harga_paket
             ->get();
 
-        $booking = Booking::orderByRaw("
+        $booking = Booking::where('status_booking', '!=', 'Accepted')
+                ->orderByRaw("
                     CASE 
                         WHEN status_booking = 'pending' THEN 0
                         WHEN status_booking = 'accept' THEN 1
@@ -56,6 +57,30 @@ class BookingController extends Controller
         }
         
         return view('admin.booking.index',compact('hargaPaket','booking','paketTambahan'));
+    }
+
+    public function bookingAccepted()
+    {
+        $paketTambahan = PaketTambahan::all();
+        
+        $hargaPaket = HargaPaket::join('paket', 'harga_paket.paket_id', '=', 'paket.id_paket')
+            ->join('kategori_paket', 'paket.kp_id', '=', 'kategori_paket.id_kp')
+            ->orderBy('kategori_paket.nama_kategori', 'asc')
+            ->select('harga_paket.*') // Ambil seig_mua kolom dari harga_paket
+            ->get();
+            
+        $booking = Booking::where('status_booking', 'Accepted')
+                ->orderByRaw("
+                    CASE 
+                        WHEN status_booking = 'pending' THEN 0
+                        WHEN status_booking = 'accept' THEN 1
+                        ELSE 2
+                    END
+                ")
+                ->orderByDesc('created_at')
+                ->get();
+
+        return view('admin.booking.booking-accepted',compact('hargaPaket','booking','paketTambahan'));
     }
 
     public function store(Request $request)
@@ -111,6 +136,7 @@ class BookingController extends Controller
         $b->status_booking = 'Pending';
         // $b->user_id = Auth::user()->id;
         $b->harga_paket_id = $request->harga_paket_id;
+        $b->discount = $request->discount;
 
         $idBooking = $b->id_booking;
         
@@ -176,6 +202,7 @@ class BookingController extends Controller
         // $b->user_id = Auth::user()->id;
         $b->harga_paket_id = $request->harga_paket_id;
         $b->harga = $harga;
+        $b->discount = $request->discount;
 
         // Update paket tambahan jika ada
         if ($request->has('paket_tambahan')) {
@@ -286,6 +313,7 @@ class BookingController extends Controller
 
             $pesanan->pelunasan = $booking->pelunasan;
             $pesanan->file_pelunasan = $booking->file_pelunasan;
+            $pesanan->discount = $booking->discount;
 
             // Buat antrian foto
             $foto = Foto::where('pesanan_id', $pesanan->id_pesanan)->first();

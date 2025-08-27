@@ -63,6 +63,7 @@ class PesananController extends Controller
         
         $fotografer = Fotografer::all();
         $paketTambahan = PaketTambahan::all();
+
         $pesanan = Pesanan::with('booking')
                     ->whereHas('booking', function ($query) use ($bulan) {
                         $query->where('status_booking', 'Accepted');
@@ -74,13 +75,35 @@ class PesananController extends Controller
                     })
                     ->join('booking', 'pesanan.booking_id', '=', 'booking.id_booking')
                     ->leftJoin('foto', 'pesanan.id_pesanan', '=', 'foto.pesanan_id') // join ke tabel foto
-                    ->orderByRaw("CASE WHEN foto.status_foto = 'Complete' THEN 1 ELSE 0 END") // Completed di bawah
+                    ->where(function ($q) {
+                        $q->whereNull('foto.status_foto')   // tampilkan yang belum ada foto
+                        ->orWhere('foto.status_foto', '!=', 'Complete'); // exclude Complete
+                    })
                     ->orderBy('booking.tanggal', 'asc') // urut tanggal naik
                     ->select('pesanan.*')
                     ->get();
         
         return view('admin.pesanan.index',compact('pesanan','fotografer','hargaPaket','paketTambahan'));
     }
+
+    public function pesananComplete()
+    {
+        $hargaPaket = HargaPaket::orderBy('paket_id')->get();
+        $fotografer = Fotografer::all();
+        $paketTambahan = PaketTambahan::all();
+
+        $pesanan = Pesanan::with('booking')
+                ->join('booking', 'pesanan.booking_id', '=', 'booking.id_booking')
+                ->leftJoin('foto', 'pesanan.id_pesanan', '=', 'foto.pesanan_id')
+                ->where('foto.status_foto', 'Complete') // hanya yang Complete
+                ->orderBy('booking.tanggal', 'asc')
+                ->select('pesanan.*')
+                ->get();
+
+        return view('admin.pesanan.pesanan-complete',compact('pesanan','fotografer','hargaPaket','paketTambahan'));
+    }
+
+
 
     public function filter2(Request $request)
     {
@@ -316,7 +339,7 @@ class PesananController extends Controller
 
     public function add_pelunasan(Request $request,$id)
     {
-        
+        // dd($request->all());
         $request->merge(
             [
                 'pelunasan' => str_replace('.', '', $request->pelunasan),
@@ -365,6 +388,7 @@ class PesananController extends Controller
             // Simpan file baru
             $pesanan->file_pelunasan = $file->store($path, 'public');
         }
+        $pesanan->status_pembayaran = $request->status_pembayaran;
         $pesanan->save();
 
         return redirect()->back()->with('success','Pelunasan berhasil ditambahkan');

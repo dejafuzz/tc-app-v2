@@ -145,12 +145,18 @@ Route::middleware(['auth'])->group(function () {
         Route::put('update/dpbooking/{id}', [BookingController::class, 'updateDp'])->name('update.dpbooking');
         Route::delete('delete/booking/{id}', [BookingController::class, 'delete'])->name('delete.booking');
         Route::put('update-status/booking/{id}', [BookingController::class, 'ubah_status'])->name('ubah.status.booking');
+
+        // BOOKING ACCEPTED
+        Route::get('booking-accepted', [BookingController::class, 'bookingAccepted'])->name('booking.accepted');
         
         //PESANAN
         Route::get('pesanan', [PesananController::class, 'index'])->name('pesanan');
         Route::get('filter/pesanan', [PesananController::class, 'filter'])->name('filter.pesanan');
         Route::put('update/pesanan/{id}', [PesananController::class, 'update'])->name('update.pesanan');
         Route::delete('delete/pesanan/{id}', [PesananController::class, 'delete'])->name('delete.pesanan');
+
+        //CLEAR PESANAN
+        Route::get('pesanan-complete', [PesananController::class, 'pesananComplete'])->name('pesanan.complete');
 
         // PELUNASAN
         Route::put('pelunasan/{id}', [PesananController::class, 'add_pelunasan'])->name('add.pelunasan');

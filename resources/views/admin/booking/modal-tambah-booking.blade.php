@@ -111,6 +111,13 @@
                         @error('harga_paket_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
                     <div class="form-group">
+                        <label for="discount" class="col-form-label">Discount</label>
+                        <input type="number" value="{{ old('discount') }}" name="discount" class="form-control @error('discount') is-invalid @enderror" id="discount">
+                        @error('discount')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="form-group">
                         <label for="kp_id" class="col-form-label">Pilih Paket Tambahan</label>
                         <select class="form-control js-paket-tambahan" 
                             style="width: 100%; height: 300px;" 

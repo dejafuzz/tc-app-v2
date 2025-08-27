@@ -40,6 +40,7 @@ return new class extends Migration
             $table->integer('pelunasan')->nullable();
             $table->text('file_pelunasan')->nullable();
             $table->string('jam_selesai')->nullable();  
+            $table->integer('discount')->nullable();
 
             $table->integer('harga')->nullable();
             
