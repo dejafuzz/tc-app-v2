@@ -35,7 +35,7 @@ class BookingController extends Controller
                     END
                 ")
                 ->orderByDesc('created_at')
-                ->paginate(20);
+                ->get();
 
 
         $pesanan = Pesanan::whereHas('booking', function ($query) {

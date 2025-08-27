@@ -77,7 +77,7 @@ class PesananController extends Controller
                     ->orderByRaw("CASE WHEN foto.status_foto = 'Complete' THEN 1 ELSE 0 END") // Completed di bawah
                     ->orderBy('booking.tanggal', 'asc') // urut tanggal naik
                     ->select('pesanan.*')
-                    ->paginate(20);
+                    ->get();
         
         return view('admin.pesanan.index',compact('pesanan','fotografer','hargaPaket','paketTambahan'));
     }

@@ -19,7 +19,7 @@ $(document).ready(function() {
     $('#booking').DataTable({
         ordering: true, // Mengaktifkan pengurutan
         scrollX: true, // Mengaktifkan scroll horizontal
-        paging: false, // Mengaktifkan pagination
+        paging: true, // Mengaktifkan pagination
         lengthMenu: [
             [10, 25, 50, -1],
             [10, 25, 50, "All"]
@@ -39,7 +39,7 @@ $(document).ready(function() {
     $('#pesanan').DataTable({
         ordering: true, // Menonaktifkan fitur pengurutan
         scrollX: true, // Mengaktifkan horizontal scrolling
-        paging: false, // Mengaktifkan pagination
+        paging: true, // Mengaktifkan pagination
         lengthMenu: [
             [10, 25, 50, -1],
             [10, 25, 50, "All"]

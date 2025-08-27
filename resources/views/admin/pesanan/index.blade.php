@@ -62,7 +62,8 @@
                         @endphp
                         @foreach ($pesanan as $item)
                             <tr class="text-center">
-                                <td>{{ $loop->iteration + ($pesanan->currentPage() -1) * $pesanan->perPage() }}</td>
+                                {{-- <td>{{ $loop->iteration + ($pesanan->currentPage() -1) * $pesanan->perPage() }}</td> --}}
+                                <td>{{ $loop->iteration }}</td>
                                 <td>{{ \Carbon\Carbon::parse($item->booking->tanggal)->translatedFormat('d-m-Y') ?? '-' }}</td>
                                 <td>{{ $item->booking->nama ?? '-' }}</td>
                                 <td>{{ $item->booking->universitas ?? '-' }}</td>
@@ -132,7 +133,6 @@
                                     @endif
                                 </td>
                                 <td>{{ 'Rp ' . number_format($item->booking->harga, 0, ',', '.') ?? '-' }}</td>
-                                {{-- <td>{{ 'Rp ' . number_format($item->booking->harga_paket->harga, 0, ',', '.') ?? '-' }}</td> --}}
                                 <td>{{ 'Rp ' . number_format($item->harga_paket_tambahan, 0, ',', '.') ?? '-' }}</td>
                                 <td>{{ 'Rp ' . number_format($item->booking->dp, 0, ',', '.') ?? '-' }}</td>
                                 <td>{{ 'Rp ' . number_format($item->discount, 0, ',', '.') ?? '-' }}</td>
@@ -140,20 +140,8 @@
                                 <td>{{ 'Rp ' . number_format($item->pelunasan, 0, ',', '.') ?? '-' }}</td>
                                 <td>{{ 'Rp ' . number_format($item->total, 0, ',', '.') ?? '-' }}</td>
                                 <td>{{ 'Rp ' . number_format($item->freelance, 0, ',', '.') ?? '-' }}</td>
-                                {{-- <td>
-                                    @if ($item->status_pembayaran == 'Lunas')
-                                        <span class="badge badge-success">{{ $item->status_pembayaran }}</span>
-                                    @elseif ($item->status_pembayaran == 'Belum Lunas')
-                                        <span class="badge badge-danger">{{ $item->status_pembayaran }}</span>
-                                    @else
-                                        {{ $item->status_pembayaran ?? '-' }}
-                                    @endif
-                                </td> --}}
                                 <td>
                                     <div class="d-flex justify-content-center">
-                                        {{-- <a href="" class="btn btn-info btn-circle btn-sm mr-2" data-toggle="modal" data-target="#modalDP{{ $item->id_pesanan }}" title="Bukti TF">
-                                            <i class="fas fa-file-image"></i>
-                                        </a> --}}
                                         <a href="{{ route('admin.export.faktur',$item->id_pesanan) }}" target="_blank" class="btn btn-info btn-circle btn-sm mr-2 {{ $item->booking?->dp ? '' : '' }}" title="Faktur">
                                             <i class="fas fa-file"></i>
                                         </a>
@@ -163,59 +151,16 @@
                                         <a href="#" class="btn btn-warning btn-circle btn-sm mr-2" data-toggle="modal" data-target="#modalEdit{{ $item->id_pesanan }}" title="Update">
                                             <i class="fas fa-exclamation-triangle"></i>
                                         </a>
-                                        {{-- <form action="{{ route('admin.delete.pesanan',$item->id_pesanan) }}" method="POST" class="delete-form">
-                                            @csrf
-                                            @method('delete')
-                                            <button type="submit" class="btn btn-danger btn-circle btn-sm delete-btn mr-2" title="Delete">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </form> --}}
                                     </div>
                                 </td>
                             </tr>
-                        
-                            <!-- Modal file Pelunasan -->
-                            
-                            {{-- <!-- Modal file -->
-                            <div class="modal fade" id="modalDP{{ $item->id_pesanan }}" tabindex="-1" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-scrollable modal-lg">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="modalLabel{{ $item->id_booking }}">Bukti DP <span class="font-weight-bold">{{ $item->booking->nama }}</span> </h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            @if ($item->booking->file_dp)
-                                                <span class="text-muted text-center">Bukti DP</span> <br>
-                                                <img src="{{ asset('storage/' . $item->booking->file_dp) }}" class="card-img-top" alt="...">
-                                            @else
-                                                <p class="text-muted text-center">Bukti DP Tidak ditemukan!</p>
-                                            @endif
-                                            <hr>
-                                            @if ($item->booking->file_pelunasan)
-                                                <span class="text-muted text-center">Bukti Pelunasan</span> <br>
-                                                <img src="{{ asset('storage/' . $item->booking->file_pelunasan) }}" class="card-img-top" alt="...">
-                                            @else
-                                                <p class="text-muted text-center">Bukti Pelunasan Tidak ditemukan!</p>
-                                            @endif
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> --}}
-                            
-                            {{-- @include('admin.pesanan.modal',['item' => $item]) --}}
                         @endforeach
                     </tbody>
                 </table>
 
-                <div class="d-flex justify-content-center mt-3">
+                {{-- <div class="d-flex justify-content-center mt-3">
                     {{ $pesanan->links() }}
-                </div>
+                </div> --}}
 
             </div>
         </div>

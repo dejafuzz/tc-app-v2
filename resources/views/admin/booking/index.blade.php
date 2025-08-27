@@ -47,7 +47,8 @@
                     <tbody>
                         @foreach ($booking as $item)
                             <tr class="text-center">
-                                <td style="max-width: 200px; width: 100px; text-align: center">{{ $loop->iteration + ($booking->currentPage() - 1) * $booking->perPage() }}</td>
+                                {{-- <td style="max-width: 200px; width: 100px; text-align: center">{{ $loop->iteration + ($booking->currentPage() - 1) * $booking->perPage() }}</td> --}}
+                                <td>{{ $loop->iteration }}</td>
                                 <td>{{ $item->nama }}</td>
                                 <td style="text-align: left">
                                     <!-- Mengubah nomor WA jika dimulai dengan '0' -->
@@ -214,9 +215,9 @@
                         @endforeach
                     </tbody>
                 </table>
-                <div class="d-flex justify-content-center mt-3">
+                {{-- <div class="d-flex justify-content-center mt-3">
                     {{ $booking->links() }}
-                </div>
+                </div> --}}
 
                 
             </div>
