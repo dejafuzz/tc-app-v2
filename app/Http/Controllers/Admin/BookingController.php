@@ -114,6 +114,8 @@ class BookingController extends Controller
             $b->user_id = $cekUser->id;
         }
 
+        $harga = HargaPaket::find($request->harga_paket_id)->harga;
+
         $b->id_booking = 'BOOK' . str_pad(rand(0, 999), 3, '0', STR_PAD_LEFT);
         $b->nama = $request->nama;
         $b->email = $request->email;
@@ -137,6 +139,7 @@ class BookingController extends Controller
         // $b->user_id = Auth::user()->id;
         $b->harga_paket_id = $request->harga_paket_id;
         $b->discount = $request->discount;
+        $b->harga = $harga;
 
         $idBooking = $b->id_booking;
         
@@ -203,6 +206,12 @@ class BookingController extends Controller
         $b->harga_paket_id = $request->harga_paket_id;
         $b->harga = $harga;
         $b->discount = $request->discount;
+
+        if ($b->pesanan) {
+            $pesanan = Pesanan::where('booking_id', $b->id_booking)->first();
+            $pesanan->discount = $request->discount;
+            $pesanan->save();
+        }
 
         // Update paket tambahan jika ada
         if ($request->has('paket_tambahan')) {
