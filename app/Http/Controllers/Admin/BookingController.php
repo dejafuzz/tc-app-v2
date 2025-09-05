@@ -85,6 +85,10 @@ class BookingController extends Controller
 
     public function store(Request $request)
     {
+        $request->merge([
+            'discount' => $request->discount ? str_replace('.', '', $request->discount) : null,
+        ]);
+
         $rules = Booking::$rules = [
             'kota' => 'required',
         ];
@@ -166,7 +170,10 @@ class BookingController extends Controller
 
     public function update(Request $request,$id)
     {
-        $request->merge(['dp' => str_replace('.', '', $request->dp)]);
+        $request->merge([
+            'dp' => str_replace('.', '', $request->dp),
+            'discount' => $request->discount ? str_replace('.', '', $request->discount) : null,
+        ]);
 
         $rules = Booking::$rules = [
             'kota' => 'required',
