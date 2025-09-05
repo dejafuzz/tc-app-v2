@@ -112,7 +112,12 @@
                     </div>
                     <div class="form-group">
                         <label for="discount" class="col-form-label">Discount</label>
-                        <input type="number" value="{{ old('discount') }}" name="discount" class="form-control @error('discount') is-invalid @enderror" id="discount">
+                        <input type="text" 
+                        value="{{ old('discount') }}" 
+                        name="discount" 
+                        class="form-control @error('discount') is-invalid @enderror" 
+                        oninput="formatNumber(this)"
+                        id="discount">
                         @error('discount')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -146,3 +151,16 @@
         </div>
     </div>
 </form>
+
+<script>
+    function formatNumber(input) {
+        // Menghapus semua karakter selain angka
+        let value = input.value.replace(/\D/g, '');
+    
+        // Menambahkan titik setiap 3 digit
+        let formattedValue = new Intl.NumberFormat('id-ID').format(value);
+    
+        // Mengatur kembali nilai input
+        input.value = formattedValue;
+    }
+</script>

@@ -1,12 +1,12 @@
 @extends('layouts.master')
 @section('content')
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">KELOLA BOOKING <strong>ACCEPTED</strong></h1>
+        <h1 class="h3 mb-0 text-gray-800">KELOLA BOOKING</h1>
     </div>
 
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex flex-wrap align-items-center">
-            <h6 class="m-0 font-weight-bold text-primary flex-grow-1">Daftar Booking <strong>Accepted</strong></h6>
+            <h6 class="m-0 font-weight-bold text-primary flex-grow-1">Daftar Booking</h6>
             <button type="button" class="btn btn-sm btn-primary shadow-sm mt-2 mt-md-0" data-toggle="modal" data-target="#modalTambah">
                 <i class="fas fa-solid fa-folder-plus fa-sm text-white-50"></i> Tambah Booking
             </button>
@@ -39,6 +39,7 @@
                             <th style="text-align: center">JML ANGGOTA</th>
                             <th style="text-align: center">CATATAN</th>
                             <th style="text-align: center">HARGA PKT</th>
+                            <th style="text-align: center">DISCOUNT</th>
                             <th style="text-align: center">HARGA PKT TMBHN</th>
                             <th style="text-align: center">TOT HARGA</th>
                             <th style="text-align: center">AKSI</th>
@@ -119,6 +120,7 @@
                                 <td style="text-align: center">{{ $item->jumlah_anggota ?? '-' }}</td>
                                 <td>{{ $item->req_khusus ?? '-' }}</td>
                                 <td>{{ 'Rp ' . number_format($item->harga_paket?->harga, 0, ',', '.') }}</td>
+                                <td>{{ 'Rp ' . number_format($item->discount, 0, ',', '.') }}</td>
 
                                 {{-- PKT TMBHN --}}
                                 @php
@@ -141,14 +143,6 @@
                                         <a href="" class="btn btn-info btn-circle btn-sm mr-2" data-toggle="modal" data-target="#modalDP{{ $item->id_booking }}" title="Bukti DP">
                                             <i class="fas fa-money-bill"></i>
                                         </a>
-
-                                        
-                                        {{-- <form action="{{ route('admin.ubah.status.booking',$item->id_booking) }}" method="post">
-                                            @csrf
-                                            @method('put')
-                                            <input type="hidden" name="status_booking" value="Accepted">
-                                            <button class="btn btn-success btn-circle btn-acc btn-sm mr-2" type="submit"><i class="fas fa-solid fa-check"></i></button>
-                                        </form> --}}
 
                                         <form action="{{ route('admin.ubah.status.booking', $item->id_booking) }}" method="post" class="accept-form">
                                             @csrf
@@ -371,7 +365,12 @@
                             </div>
                             <div class="form-group">
                                 <label for="discount" class="col-form-label">Discount</label>
-                                <input type="number" value="{{ old('discount', $item->discount) }}" name="discount" class="form-control @error('discount') is-invalid @enderror" id="discount">
+                                <input type="text" 
+                                    value="{{ old('discount', number_format($item->discount ?? 0, 0, ',', '.')) }}" 
+                                    name="discount" 
+                                    class="form-control @error('discount') is-invalid @enderror" 
+                                    oninput="formatNumber(this)"
+                                    id="discount">
                                 @error('discount')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror

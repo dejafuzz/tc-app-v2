@@ -39,6 +39,7 @@
                             <th style="text-align: center">JML ANGGOTA</th>
                             <th style="text-align: center">CATATAN</th>
                             <th style="text-align: center">HARGA PKT</th>
+                            <th style="text-align: center">DISCOUNT</th>
                             <th style="text-align: center">HARGA PKT TMBHN</th>
                             <th style="text-align: center">TOT HARGA</th>
                             <th style="text-align: center">AKSI</th>
@@ -119,6 +120,7 @@
                                 <td style="text-align: center">{{ $item->jumlah_anggota ?? '-' }}</td>
                                 <td>{{ $item->req_khusus ?? '-' }}</td>
                                 <td>{{ 'Rp ' . number_format($item->harga_paket?->harga, 0, ',', '.') }}</td>
+                                <td>{{ 'Rp ' . number_format($item->discount, 0, ',', '.') }}</td>
 
                                 {{-- PKT TMBHN --}}
                                 @php
@@ -363,7 +365,12 @@
                             </div>
                             <div class="form-group">
                                 <label for="discount" class="col-form-label">Discount</label>
-                                <input type="number" value="{{ old('discount', $item->discount) }}" name="discount" class="form-control @error('discount') is-invalid @enderror" id="discount">
+                                <input type="text" 
+                                    value="{{ old('discount', number_format($item->discount ?? 0, 0, ',', '.')) }}" 
+                                    name="discount" 
+                                    class="form-control @error('discount') is-invalid @enderror" 
+                                    oninput="formatNumber(this)"
+                                    id="discount">
                                 @error('discount')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
