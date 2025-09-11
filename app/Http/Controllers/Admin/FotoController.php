@@ -5,29 +5,50 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Foto;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class FotoController extends Controller
 {
     public function index(){
-        // $foto = Foto::where('status_foto','Editing')->get();
+
+        // set antrian
+        $this->resetAntrian();
+        
         $fotos = Foto::with(['pesanan.booking'])
                 ->join('pesanan', 'foto.pesanan_id', '=', 'pesanan.id_pesanan')
                 ->join('booking', 'pesanan.booking_id', '=', 'booking.id_booking')
+                ->orderByRaw("CASE WHEN antrian IS NULL THEN 1 ELSE 0 END, antrian ASC") 
                 ->orderByRaw("CASE WHEN status_foto = 'Complete' THEN 1 ELSE 0 END") // "Complete" last
                 ->orderBy('booking.tanggal', 'asc') // tetap urut berdasarkan tanggal
                 ->select('foto.*')
                 ->get();
-
-       // Set antrian secara berurutan
-        // $no = 1;
-        // foreach ($fotos as $foto) {
-        //     $foto->antrian = $no++;
-        //     $foto->save();
-        // }
         
         $antrianFoto = Foto::where('status_foto', 'Editing')->orderBy('antrian','desc')->first();
         
         return view('admin.foto.index',compact('fotos','antrianFoto'));
+    }
+
+    protected function resetAntrian()
+    {
+        DB::transaction(function () {
+            DB::table('foto')->update(['antrian' => null]);
+
+            DB::statement("
+                UPDATE foto f
+                JOIN (
+                    SELECT id_foto, ROW_NUMBER() OVER (
+                        ORDER BY
+                            CASE WHEN status_foto = 'Editing' THEN 1
+                                WHEN status_foto = 'List File Edit' THEN 2
+                                ELSE 3 END,
+                            created_at
+                    ) AS rn
+                    FROM foto
+                    WHERE status_foto IN ('Editing', 'List File Edit')
+                ) o ON f.id_foto = o.id_foto
+                SET f.antrian = o.rn
+            ");
+        });
     }
 
     public function update(Request $request,$id)
