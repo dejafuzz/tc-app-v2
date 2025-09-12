@@ -25,9 +25,8 @@
                     <thead>
                         <tr class="text-center">
                             <th class="text-center">NO</th>
-                            <th class="text-center">TANGGAL</th>
+                            <th class="text-center">TANGGAL LIST</th>
                             <th class="text-center">ANTRIAN</th>
-                            <th class="text-center">CREATED AT</th>
                             <th class="text-center">CLIENT</th>
                             <th class="text-center">KAMPUS</th>
                             <th class="text-center">STATUS PEMBAYARAN</th>
@@ -41,9 +40,14 @@
                         @foreach ($fotos as $item)
                             <tr class="text-center">
                                 <td class="text-center">{{ $loop->iteration }}</td>
-                                <td class="text-center">{{ $item->pesanan->booking->tanggal }}</td>
+                                <td>
+                                    @if ($item->tanggal_list == null)
+                                        -
+                                    @else
+                                        {{ \Carbon\Carbon::parse($item->tanggal_list)->translatedFormat('d F Y') ?? '' }}
+                                    @endif
+                                </td>
                                 <td class="text-center">{{ $item->antrian ?? '-' }}</td>
-                                <td>{{ \Carbon\Carbon::parse($item->created_at)->translatedFormat('d F Y') ?? '-' }}</td>
                                 <td class="text-center">{{ $item->pesanan->booking->nama }}</td>
                                 <td class="text-center">{{ $item->pesanan->booking->universitas ?? '-' }}</td>
                                 <td class="text-center">

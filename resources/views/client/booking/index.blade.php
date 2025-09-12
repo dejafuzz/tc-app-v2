@@ -104,7 +104,7 @@
                                     @endphp
                                     @if ($item?->pesanan?->foto->status_foto == 'List File Edit')
                                         <strong>Antrian Anda:</strong> <span class="badge badge-dark">{{ $antrianAnda }}</span> <br>
-                                        <strong>Antrian Sekarang:</strong> <span class="badge badge-dark">{{ $antrianSekarang . '/' . $jumlahAntrian }}</span>
+                                        {{-- <strong>Antrian Sekarang:</strong> <span class="badge badge-dark">{{ $antrianSekarang . '/' . $jumlahAntrian }}</span> --}}
                                     @endif
                                 </p>
                             </div>
