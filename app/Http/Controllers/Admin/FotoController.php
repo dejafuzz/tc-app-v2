@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Foto;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class FotoController extends Controller
@@ -12,7 +13,7 @@ class FotoController extends Controller
     public function index(){
 
         // set antrian
-        $this->resetAntrian();
+        Foto::resetAntrian();
         
         $fotos = Foto::with(['pesanan.booking'])
                 ->join('pesanan', 'foto.pesanan_id', '=', 'pesanan.id_pesanan')
@@ -26,29 +27,6 @@ class FotoController extends Controller
         $antrianFoto = Foto::where('status_foto', 'Editing')->orderBy('antrian','desc')->first();
         
         return view('admin.foto.index',compact('fotos','antrianFoto'));
-    }
-
-    protected function resetAntrian()
-    {
-        DB::transaction(function () {
-            DB::table('foto')->update(['antrian' => null]);
-
-            DB::statement("
-                UPDATE foto f
-                JOIN (
-                    SELECT id_foto, ROW_NUMBER() OVER (
-                        ORDER BY
-                            CASE WHEN status_foto = 'Editing' THEN 1
-                                WHEN status_foto = 'List File Edit' THEN 2
-                                ELSE 3 END,
-                            created_at
-                    ) AS rn
-                    FROM foto
-                    WHERE status_foto IN ('Editing', 'List File Edit')
-                ) o ON f.id_foto = o.id_foto
-                SET f.antrian = o.rn
-            ");
-        });
     }
 
     public function update(Request $request,$id)
@@ -68,6 +46,11 @@ class FotoController extends Controller
         $foto = Foto::find($id);
         $foto->status_foto = $request->status_foto;
         $foto->link = $request->link;
+        if ($request->status_foto == 'List File Edit') {
+            $antrianTerakhir = Foto::max('antrian') ?? 0;
+            $foto->antrian = $antrianTerakhir + 1;
+            $foto->tanggal_list = Carbon::now();
+        }
         $foto->save();
 
         return redirect()->back()->with('success','Foto berhasil diperbarui');

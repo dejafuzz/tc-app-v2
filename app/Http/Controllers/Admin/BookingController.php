@@ -333,7 +333,6 @@ class BookingController extends Controller
 
             // Buat antrian foto
             $foto = Foto::where('pesanan_id', $pesanan->id_pesanan)->first();
-            $antrianTerakhir = Foto::max('antrian') ?? 0;
 
             if (!$foto) {
                 $foto = new Foto();
@@ -341,7 +340,6 @@ class BookingController extends Controller
                 $foto->pesanan_id = $pesanan->id_pesanan;
                 $foto->status_foto = 'Waiting for Photoshoot';
                 $foto->link = $request->link;
-                $foto->antrian = $antrianTerakhir + 1;
             } else {
                 $foto->status_foto = 'Waiting for Photoshoot';
                 $foto->link = $request->link;
