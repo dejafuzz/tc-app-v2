@@ -14,6 +14,7 @@ use App\Exports\PesananExport;
 use App\Models\PaketTambahan;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 
 class PesananController extends Controller
@@ -61,7 +62,7 @@ class PesananController extends Controller
             ]);
         }
         
-        $fotografer = Fotografer::all();
+        $fotografer = Fotografer::orderBy('nama', 'asc')->get();
         $paketTambahan = PaketTambahan::all();
 
         $pesanan = Pesanan::with('booking')
@@ -89,7 +90,7 @@ class PesananController extends Controller
     public function pesananComplete()
     {
         $hargaPaket = HargaPaket::orderBy('paket_id')->get();
-        $fotografer = Fotografer::all();
+        $fotografer = Fotografer::orderBy('nama', 'asc')->get();
         $paketTambahan = PaketTambahan::all();
 
         $pesanan = Pesanan::with('booking')
@@ -272,26 +273,17 @@ class PesananController extends Controller
 
         // INSERT FOTO JIKA BELUM ADA DAN BUAT ANTRIAN
         $foto = Foto::where('pesanan_id',$pesanan->id_pesanan)->first();
-        $antrianFoto = Foto::where('status_foto', 'Editing')->orderBy('antrian','desc')->first();
-        if ($antrianFoto) {
-            $antrianFoto = $antrianFoto->antrian;
-        } else {
-            $antrianFoto = Foto::count();
-        }
         if (!$foto) {
             $foto = new Foto();
-            $foto->id_foto = 'FT' . str_pad(rand(0, 999), 3, '0', STR_PAD_LEFT);
-            // $foto->status_foto = $request->status_foto;
-            // $foto->link = $request->link;
+            $foto->id_foto = 'FT' . str_pad(rand(0, 999), 3, '0', STR_PAD_LEFT) . Carbon::now()->format('YmdHis');
             $foto->pesanan_id = $pesanan->id_pesanan;
-            $foto->antrian = $antrianFoto + 1;
             $foto->save();
         } 
         else {
             // $foto->status_foto = $request->status_foto;
             // $foto->link = $request->link;
-            if ($request->status_pembayaran == 'Lunas') {
-                $foto->status_foto = 'Uploading File';
+            if ($request->status_pembayaran == 'Lunas' && $foto->status_foto == 'Waiting for Photoshoot') {
+                $foto->status_foto = 'Sending File';
             }
             $foto->save();
         }
@@ -339,7 +331,6 @@ class PesananController extends Controller
 
     public function add_pelunasan(Request $request,$id)
     {
-        // dd($request->all());
         $request->merge(
             [
                 'pelunasan' => str_replace('.', '', $request->pelunasan),
@@ -349,6 +340,7 @@ class PesananController extends Controller
 
         $pesanan = Pesanan::find($id);
         $booking = Booking::find($pesanan->booking_id);
+        $foto = Foto::where('pesanan_id', $pesanan->id_pesanan)->first();
 
         $booking->dp = $request->dp;
 
@@ -390,6 +382,12 @@ class PesananController extends Controller
         }
         $pesanan->status_pembayaran = $request->status_pembayaran;
         $pesanan->save();
+
+        if ($request->status_pembayaran == 'Lunas' && $foto->status_foto == 'Waiting for Photoshoot') {
+            $foto->status_foto = 'Sending File';
+            $foto->link = $request->link;
+            $foto->save();
+        }
 
         return redirect()->back()->with('success','Pelunasan berhasil ditambahkan');
     }
