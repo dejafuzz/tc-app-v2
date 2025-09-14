@@ -204,8 +204,8 @@
                             </div>
 
                             @if ($item->booking->file_dp)
-                                <img src="{{ asset('storage/' . $item->booking->file_dp) }}" class="card-img-top mt-2" alt="Bukti DP">
-                                <p>Bukti DP</p>
+                                {{-- <img src="{{ asset('storage/' . $item->booking->file_dp) }}" class="card-img-top mt-2" alt="Bukti DP"> --}}
+                                <a target="_blank" href="{{ asset('storage/' . $item->booking->file_dp) }}">Klik untuk melihat Bukti DP</a>
                             @else
                                 <p class="text-muted mt-2">Bukti DP tidak ditemukan!</p>
                             @endif
@@ -232,11 +232,12 @@
                                 @enderror
                             </div>
                             @if ($item->file_pelunasan)
-                                <img src="{{ asset('storage/' . $item->file_pelunasan) }}" class="card-img-top mt-2" alt="Bukti Pelunasan">
-                                <p>Bukti Pelunasan</p>
+                                {{-- <img src="{{ asset('storage/' . $item->file_pelunasan) }}" class="card-img-top mt-2" alt="Bukti Pelunasan"> --}}
+                                <a target="_blank" href="{{ asset('storage/' . $item->file_pelunasan) }}">Klik untuk melihat Bukti Pelunasan</a>
                             @else
                                 <p class="text-muted mt-2">Bukti Pelunasan tidak ditemukan!</p>
                             @endif
+                            <hr>
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <label for="status_pembayaran" class="col-form-label">Status Pembayaran</label><br>
@@ -260,11 +261,23 @@
                                     @enderror
                                 </div>
                             </div>
+                            <hr>
+                            {{-- untuk link gdrive -> send WA --}}
+                            <input type="hidden" id="nama{{ $item->id_pesanan }}" value="{{ $item->booking?->nama }}">
+                            <input type="hidden" id="no_wa{{ $item->id_pesanan }}" value="{{ $item->booking?->no_wa }}">
+                            <input type="hidden" id="currentLink{{ $item->id_pesanan }}" value="{{ $item->booking?->link }}">
+                            <div class="form-group">
+                                <label for="link{{ $item->id_pesanan }}" class="col-form-label">Link Foto</label>
+                                <textarea name="link" id="link{{ $item->id_pesanan }}" class="form-control @error('link') is-invalid @enderror">{{ old('link',$item->foto->link) }}</textarea>
+                                @error('link')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
 
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="submit" class="btn btn-primary submitFormBtn" data-id="{{ $item->id_pesanan }}">Submit</button>
                         </div>
                     
                 </div>
@@ -386,8 +399,8 @@
                                 
                                     <div class="form-group col-md-6">
                                         <label for="fotografer_id" class="col-form-label">Fotografer</label>
-                                        <select id="inputState" name="fotografer_id" class="form-control @error('fotografer_id') is-invalid @enderror">
-                                            <option value="">-- Pilih Fotografer --</option>
+                                        <select id="paket_id" name="fotografer_id" class="form-control js-example-basic-single-update-fg @error('fotografer_id') is-invalid @enderror">
+                                            <option selected disabled value="">-- Pilih Fotografer --</option>
                                             @foreach ($fotografer as $fg)
                                                 <option 
                                                     value="{{ $fg->id_fotografer }}" 
@@ -683,7 +696,67 @@
                 tokenSeparators: [] // Menghapus pemisah token, memungkinkan input spasi
             });
         </script>
+
+        <script>
+    document.querySelectorAll('.submitFormBtn').forEach(button => {
+    button.addEventListener('click', function () {
+        const id = this.dataset.id;
+        const nama = document.getElementById(`nama${id}`).value;
+        let no_wa = document.getElementById(`no_wa${id}`).value.trim();
+        const currentLink = document.getElementById(`currentLink${id}`).value;
+        const link = document.getElementById(`link${id}`).value;
+        let message = '';
+
+        // Hapus karakter non-digit
+        no_wa = no_wa.replace(/\D/g, '');
+
+        // Convert jika diawali dengan '08'
+        if (no_wa.startsWith('08')) {
+            no_wa = '62' + no_wa.slice(1);
+        }
+
+    message = `Halo ka ${nama}, Berikut ini untuk link foto originalnya yah
+
+${link}
+
+Nanti dipilih (Jumlah Photo) foto untuk kami edit,
+
+misal di gdrivenya ada IMG_5678 langsung list aja di web ya kak (wajib berurutan nomer) :
+1. IMG_5678
+2. IMG_1234
+dst
+
+List photo edit langsung di Input di Web tersimpancerita.id, Input secara satu per satu di Menu "Pilih Photo Edit", sebagai contoh Input Listnya :
+
+Ketikan Nomer Photo : IMG_5678, lalu Enter (Bukan Submit ya ka) dan seterusnya sampai Selesai
+
+Massa simpan foto di Drive 14 hari terhitung dari hari ini ya ka, jadi mohon untuk langsung di backup/download menggunakan Laptop atau PC
+
+Terimakasih sebelumnya kak...`.trim();
+
+        if (link !== '' && no_wa !== '') {
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/${no_wa}?text=${encodedMessage}`;
+            window.open(whatsappUrl, '_blank');
+        }
+
+        // Submit form
+        document.getElementById(`fotoForm${id}`).submit();
+    });
+});
+</script>
     @endforeach
+
+    <script>
+        $(document).ready(function() {
+            // Inisialisasi Select2 saat modal dengan ID yang dimulai dengan "modalEdit" ditampilkan
+            $('div[id^="modalEdit"]').on('shown.bs.modal', function () {
+                $(this).find('.js-example-basic-single-update-fg').select2({
+                    dropdownParent: $(this) // Pastikan dropdown berada dalam modal yang benar
+                });
+            });
+        });
+    </script>
 
     {{-- SweetAlert Delete --}}
     <script>
