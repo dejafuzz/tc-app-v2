@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Validator;
 class FotograferController extends Controller
 {
     public function index(){
-        $fg = Fotografer::all();
+        $fg = Fotografer::orderBy('nama', 'asc')->get();
         return view('admin.fotografer.index',compact('fg'));
     }
 
