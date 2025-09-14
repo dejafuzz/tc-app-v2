@@ -318,7 +318,8 @@ class BookingController extends Controller
 
     public function pembayaran(Request $request, $id)
     {
-        // return 'ads';
+        
+        dd(Booking::find($id)?->pesanan?->foto);
         $request->validate(
             [
                 'nominal' => 'nullable|min:0',
