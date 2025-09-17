@@ -324,9 +324,13 @@ class PesananController extends Controller
 
         // Membuat PDF dari HTML
         $pdf = Pdf::loadHTML($html)->setPaper('legal');
+
+        // ganti karakter / \ menjadi _
+        $fileName = 'Faktur#' . $pesanan->faktur . '#' . $pesanan->booking->nama . '.pdf';
+        $fileName = preg_replace('/[\/\\\\]/', '_', $fileName); // ganti / dan \ dengan _
         
         // Menampilkan PDF di browser sebagai preview (tidak langsung diunduh)
-        return $pdf->stream('Faktur#' . $pesanan->faktur . '#' . $pesanan->booking->nama . '.pdf'); // Anda bisa mengganti nama file sesuai kebutuhan
+        return $pdf->stream($fileName);
     }
 
     public function add_pelunasan(Request $request,$id)
