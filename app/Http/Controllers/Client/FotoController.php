@@ -20,7 +20,10 @@ class FotoController extends Controller
         $foto->foto_edit = $foto_edit;
         $foto->status_foto = 'List File Edit';
         $foto->antrian = $antrianTerakhir + 1;
-        $foto->tanggal_list = Carbon::now();
+
+        if ($foto->tanggal_list == null) {
+            $foto->tanggal_list = Carbon::now();
+        }
         $foto->save();
 
         Foto::resetAntrian();
