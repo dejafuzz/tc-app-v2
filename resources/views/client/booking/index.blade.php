@@ -378,7 +378,14 @@
                             </div>
                         </div>
                     </form>
-                
+
+                    {{-- scrollable select2 --}}
+                    <style>
+                        .js-example-tokenizer ~ .select2 .select2-selection--multiple {
+                            max-height: 200px;
+                            overflow-y: auto;
+                        }
+                    </style>
                     <!-- Modal pilih edit foto -->
                     <div class="modal fade" id="modalEditFoto{{ $item->id_booking }}" tabindex="-1" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-scrollable modal-lg">
@@ -404,7 +411,7 @@
                                             <label for="kp_id" class="col-form-label">Pilih foto yang akan diedit</label>
                                             <select class="form-control js-example-tokenizer"
                                                 {{ $item->pesanan?->foto?->status_foto == 'Editing' || $item->pesanan?->foto?->status_foto == 'Complete' ? 'disabled' : '' }} 
-                                                style="width: 100%; height: 300px;" 
+                                                style="width: 100%; height: 1000px;" 
                                                 multiple="multiple" name="foto_edit[]">
                                                 @if ($item->pesanan?->foto?->foto_edit)
                                                     @php
